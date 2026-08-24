@@ -1,49 +1,37 @@
-# ParSafe Project
+# ParSafe
 
-ParSafe is a React + Python parking decision application built around a retained processed parking dataset.
+ParSafe is a React + FastAPI parking decision project built around a retained processed parking dataset.
 
-## Architecture
-
-```text
-React / Vite
-    |
-    v
-Python / FastAPI
-    |
-    +---- validated ranking
-    +---- constraint-aware retrieval
-    +---- analytics
-    +---- optional grounded Gemini generation
-    |
-    v
-Canonical parking dataset
-```
-
-The Python backend is the source of ranking and retrieval business logic.
-
-## Static GitHub Pages mode
-
-GitHub Pages cannot run FastAPI.
-
-To keep the public demo interactive without duplicating ranking logic in JavaScript, Python pre-generates:
+## Repository structure
 
 ```text
-public/static-demo.json
+.
+├── src/                    React frontend
+│   ├── components/
+│   └── styles/
+├── public/                 Static assets for GitHub Pages
+│   └── static-demo.json
+├── backend/                FastAPI backend
+│   ├── app/
+│   ├── data/
+│   ├── pipeline/
+│   ├── scripts/
+│   └── tests/
+├── docs/                   Architecture and provenance notes
+├── .github/workflows/      GitHub Pages deployment
+├── index.html
+├── package.json
+└── vite.config.js
 ```
 
-This contains:
-
-- ranking results for all UI filter combinations
-- analytics
-- a small set of example retrieval questions
-
-The React app reads those generated outputs when the API is offline.
-
-Regenerate static demo data with:
+## Frontend
 
 ```bash
-python backend/scripts/build_demo_data.py
+npm install
+npm run dev
 ```
+
+GitHub Pages builds the Vite app through `.github/workflows/deploy.yml`.
 
 ## Backend
 
@@ -64,49 +52,23 @@ macOS/Linux:
 source .venv/bin/activate
 ```
 
-Install:
+Install and run:
 
 ```bash
 pip install -r requirements.txt
-```
-
-Run:
-
-```bash
 python run.py
 ```
 
-API:
-
-```text
-http://localhost:8000
-```
-
-API documentation:
+API docs:
 
 ```text
 http://localhost:8000/docs
 ```
 
-## Frontend
-
-Create `.env` in the project root:
+To connect the frontend locally, create a root `.env` file with:
 
 ```text
 VITE_API_URL=http://localhost:8000
-```
-
-Install and run:
-
-```bash
-npm install
-npm run dev
-```
-
-Open:
-
-```text
-http://localhost:5173
 ```
 
 ## Tests
@@ -117,17 +79,21 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-GitHub Actions runs backend tests before building or deploying the frontend.
+## Static GitHub Pages demo
 
-## Build
+GitHub Pages cannot run FastAPI, so the repository includes a pre-generated static demo file at:
+
+```text
+public/static-demo.json
+```
+
+To regenerate it from the Python ranking and retrieval code:
 
 ```bash
 python backend/scripts/build_demo_data.py
-npm install
-npm run build
 ```
 
-## Docker backend
+## Docker
 
 ```bash
 cd backend
@@ -135,64 +101,22 @@ docker build -t parsafe-api .
 docker run -p 8000:8080 parsafe-api
 ```
 
-## Optional Gemini on Vertex AI
+## Optional Gemini integration
 
-The Python backend contains an optional grounded Gemini integration.
-
-Copy:
+Backend configuration is documented in:
 
 ```text
 backend/.env.example
 ```
 
-to:
+Gemini is optional. Without it, the API uses deterministic retrieval-grounded responses.
 
-```text
-backend/.env
-```
-
-Set the Google Cloud project values and:
-
-```text
-USE_VERTEX_GEMINI=true
-```
-
-Without Gemini enabled, the backend returns deterministic retrieval-grounded recommendations.
-
-## Parking score provenance
-
-The retained dataset already contains `parking_score`.
-
-The exact original weighting formula is not preserved, so the repository does not invent one.
-
-Current ranking:
-
-1. validate user preferences
-2. apply filters
-3. sort by saved `parking_score`
-4. break ties with walking time
-5. return the top five
+## Documentation
 
 See:
 
 ```text
-SCORE_PROVENANCE.md
+docs/ARCHITECTURE.md
+docs/PIPELINE_PROVENANCE.md
+docs/SCORE_PROVENANCE.md
 ```
-
-## Data pipeline provenance
-
-The repository does not claim to contain the exact original external API ingestion notebook.
-
-A supported processed-snapshot normalization step is documented in:
-
-```text
-backend/pipeline/rebuild_processed_snapshot.py
-```
-
-See:
-
-```text
-PIPELINE_PROVENANCE.md
-```
-
-

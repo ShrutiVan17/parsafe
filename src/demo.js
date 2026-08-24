@@ -1,9 +1,12 @@
-import staticDemo from '../static-demo.json'
-
 let cache = null
 
 export async function getStaticDemo() {
-  if (!cache) cache = staticDemo
+  if (cache) return cache
+
+  const response = await fetch(`${import.meta.env.BASE_URL}static-demo.json`)
+  if (!response.ok) throw new Error('Static demo data unavailable')
+
+  cache = await response.json()
   return cache
 }
 
