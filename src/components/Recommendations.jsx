@@ -5,11 +5,7 @@ export default function Recommendations({ items, selected, onSelect }) {
     <div className="recommend-layout">
       <div className="result-list">
         {items.map((item, index) => (
-          <motion.button key={item.parking_id}
-            className={`result-card ${selected?.parking_id === item.parking_id ? 'active' : ''}`}
-            onClick={() => onSelect(item)}
-            initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * .05 }}>
+          <motion.button key={item.parking_id} className={`result-card ${selected?.parking_id === item.parking_id ? 'active' : ''}`} onClick={() => onSelect(item)} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * .05 }}>
             <span className="rank">0{index + 1}</span>
             <div><strong>{item.name}</strong><small>{item.address}</small></div>
             <div className="metric"><b>{item.walking_minutes} min</b><small>score {Number(item.parking_score).toFixed(3)}</small></div>

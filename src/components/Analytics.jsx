@@ -7,7 +7,6 @@ export default function Analytics({ stats }) {
         <div className="eyebrow">ANALYTICS</div>
         <h2>Parking snapshot.</h2>
       </div>
-
       <div className="kpis">
         <div><small>RECORDS</small><strong>{stats.records}</strong></div>
         <div><small>AVG WALK</small><strong>{stats.avgWalk} min</strong></div>
