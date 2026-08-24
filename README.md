@@ -195,26 +195,4 @@ See:
 PIPELINE_PROVENANCE.md
 ```
 
-## GitHub Pages
 
-The workflow is:
-
-```text
-.github/workflows/deploy.yml
-```
-
-On GitHub:
-
-1. Open `Settings`.
-2. Open `Pages`.
-3. Set source to `GitHub Actions`.
-4. Push to `main`.
-5. Wait for `Test and Deploy ParSafe` to complete.
-
-## Documentation
-
-```text
-ARCHITECTURE.md
-SCORE_PROVENANCE.md
-PIPELINE_PROVENANCE.md
-```
